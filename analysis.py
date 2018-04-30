@@ -22,11 +22,7 @@ for i in range(len(lines)):
         line = lines[i].rstrip('\n')
 
         # 空行
-        if not line:
-            continue
-
-        # 注释行作为小节分界
-        elif line[0] == '#':
+        if not line or line[0] == '#':
             if sec_len > 0:
                 sec_count += 1
                 print('第%d小节长度为%.1f拍' % (sec_count, sec_len))
@@ -45,6 +41,12 @@ for i in range(len(lines)):
     except Exception as e:
         print('在读取第%d节，第%d行 %r 时出错：%s' % (sec_count + 1, i, line, e))
         sys.exit(1)
+
+# 最后小节
+if sec_len > 0:
+    sec_count += 1
+    print('第%d小节长度为%.1f拍' % (sec_count, sec_len))
+    sec_len = 0
 
 print('共读取%d小节，%d个音符' % (sec_count, len(song)))
 

@@ -162,7 +162,7 @@ class wav_writer:
     参数 :  
     name : 输出文件名  
     framerate : 采样率  
-    volumn : 音量，范围为(0,32767)  
+    volumn : 音量，范围为(0,100)  
     '''
     _bw_dict = {1: np.int8, 2: np.int16, 4: np.int32, 8: np.int64}
 
@@ -174,7 +174,7 @@ class wav_writer:
         '''初始化'''
         assert isinstance(framerate, int) and framerate > 0
         assert bytewidth in wav_writer._bw_dict
-        assert 0 < volumn <= 100
+        assert 0 < volumn < 100
 
         self.name = name
         self.rate = framerate
