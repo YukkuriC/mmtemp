@@ -229,7 +229,7 @@ class wav_writer:
         stream = np.concatenate(self.buffer)
         file.writeframesraw(stream.astype(wav_writer._bw_dict[self.bytewidth]))
         file.close()
-        self.buffer = np.array([])
+        self.buffer = []
 
 
 if __name__ == '__main__':
