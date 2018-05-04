@@ -36,16 +36,21 @@ for(song in c('luv letter','Flower Dance','克罗地亚狂想曲')){
   data_count=rbind(
     cbind(
       as.data.frame(table(round(with(fdata,log(pyth/equal,2)*1200)))),
-      type='五度相生律'
+      type='五度相生律/十二平均律'
     ),
     cbind(
       as.data.frame(table(round(with(fdata,log(pure/equal,2)*1200)))),
-      type='纯律'
+      type='纯律/十二平均律'
+    ),
+    cbind(
+      as.data.frame(table(round(with(fdata,log(pure/pyth,2)*1200)))),
+      type='纯律/五度相生律'
     )
   )
   data_count$Var1=as.numeric(as.vector(data_count$Var1))
+  data_count$Freq=data_count$Freq*3/sum(data_count$Freq)*100
   
-  plot_diff=ggplot(data=data_count)+theme_bw()+labs(x='与十二平均律相差/音分',y='频数')+scale_color_hue('律制')+
+  plot_diff=ggplot(data=data_count)+theme_bw()+labs(x='音分差距',y='频率/%')+scale_color_hue('律制')+
     geom_segment(aes(x=Var1,xend=Var1,y=0,yend=Freq,color=type))+
     geom_point(aes(x=Var1,y=Freq,color=type))
   
@@ -53,3 +58,4 @@ for(song in c('luv letter','Flower Dance','克罗地亚狂想曲')){
   print(plot_diff)
   graphics.off()
 }
+
