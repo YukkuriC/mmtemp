@@ -35,15 +35,15 @@ for(song in c('luv letter','Flower Dance','克罗地亚狂想曲')){
   #音分差统计
   data_count=rbind(
     cbind(
-      as.data.frame(table(round(with(fdata,log(pyth/equal,2)*1200)))),
+      as.data.frame(table(round(with(fdata,log(pyth/equal,2)*1200),1))),
       type='五度相生律/十二平均律'
     ),
     cbind(
-      as.data.frame(table(round(with(fdata,log(pure/equal,2)*1200)))),
+      as.data.frame(table(round(with(fdata,log(pure/equal,2)*1200),1))),
       type='纯律/十二平均律'
     ),
     cbind(
-      as.data.frame(table(round(with(fdata,log(pure/pyth,2)*1200)))),
+      as.data.frame(table(round(with(fdata,log(pure/pyth,2)*1200),1))),
       type='纯律/五度相生律'
     )
   )
