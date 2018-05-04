@@ -7,30 +7,43 @@ name=c('十二平均律','五度相生律','纯律')
 {
   fdata=read.csv('自然音级_freq.csv')
   
+  # 频率分布图
   plot_seq=ggplot()+theme_bw()+
     theme(panel.grid.minor = element_blank(),axis.text.x = element_text(hjust=1,angle=45))+
-    labs(y='自然音级(A4=440Hz)',x='音级/频率(十二平均律,Hz)')+scale_color_hue('律制')+
+    labs(y='自然音级(A4=440Hz)',x='十二平均律音级/距A4音分数')+scale_color_hue('律制')+
     scale_y_continuous(breaks=c(-100,100))+
     scale_x_log10(
       breaks=fdata$equal,
-      labels=c("C4 / 261","D4 / 293","E4 / 329","F4 / 349","G4 / 391","A4 / 440","B4 / 493",
-               "C5 / 523","D5 / 587","E5 / 659","F5 / 698","G5 / 783","A5 / 880","B5 / 987",
-               "C6 / 1046")
-      )
-  for(i in c(2,3)){
-    plot_seq=plot_seq+eval(parse(
-      text=sprintf(
-        'geom_segment(data=fdata,aes(y=-1,yend=1,x=%s,xend=%s,color="%s"))',
-        type[i],type[i],name[i]
-      )
-    ))
-  }
+      labels=c("C4 / -900","D4 / -700","E4 / -500","F4 / -400","G4 / -200","A4 / 0","B4 / 200",
+               "C5 / 300","D5 / 500","E5 / 700","F5 / 800","G5 / 1000","A5 / 1200","B5 / 1400",
+               "C6 / 1500")
+      )+
+    geom_segment(data=fdata,aes(y=-1,yend=1,x=pyth,xend=pyth,color="五度相生律"))+
+    geom_segment(data=fdata,aes(y=-1,yend=1,x=pure,xend=pure,color="纯律"))
   
   pdf('自然音级_频率.pdf',10,4,family="GB1")
   print(plot_seq)
   graphics.off()
   
-  # 分布图
+  # 音程间频率差
+  plot_diff=ggplot()+theme_bw()+
+    theme(panel.grid.minor = element_blank(),axis.text.x = element_text(hjust=1,angle=45))+
+    labs(y='音级间相差音分数',x='十二平均律音级/距A4音分数')+scale_color_hue('律制')+
+    scale_y_continuous(breaks=seq(-20,20,2))+
+    scale_x_log10(
+      breaks=fdata$equal,
+      labels=c("C4 / -900","D4 / -700","E4 / -500","F4 / -400","G4 / -200","A4 / 0","B4 / 200",
+               "C5 / 300","D5 / 500","E5 / 700","F5 / 800","G5 / 1000","A5 / 1200","B5 / 1400",
+               "C6 / 1500")
+    )+geom_hline(aes(yintercept=0))+
+    geom_line(data=fdata,aes(x=equal,y=log(pyth/equal,2)*1200,color='五度相生律'))+
+    geom_line(data=fdata,aes(x=equal,y=log(pure/equal,2)*1200,color='纯律'))
+  
+  pdf('自然音级_频率差.pdf',10,5,family="GB1")
+  print(plot_diff)
+  graphics.off()
+  
+  # 二度音程分布图
   plot_dist=ggplot()+theme_bw()+theme(panel.grid.minor = element_blank())+
     labs(x='音程长度/音分',y='密度')+scale_color_hue('律制')+
     scale_x_continuous(breaks=c(100,200))
@@ -53,6 +66,7 @@ name=c('十二平均律','五度相生律','纯律')
   fdata=read.csv('变化音级_freq.csv')
   fdata$offset=(1:nrow(fdata))%%2
   
+  # 频率分布图
   plot_seq=ggplot()+theme_bw()+
     theme(panel.grid.minor = element_blank(),axis.text.x = element_text(hjust=1,angle=45))+
     labs(y='变化音级(A4=440Hz)',x='音级(十二平均律)')+scale_color_hue('律制')+
@@ -68,17 +82,38 @@ name=c('十二平均律','五度相生律','纯律')
         '#B3 bC4', 'C4', '#C4 bD4', 'D4', '#D4 bE4', 'E4 bF4', '#E4 F4', 
         '#F4 bG4', 'G4', '#G4 bA4', 'A4', '#A4 bB4', 'B4 bC5', '#B4 C5', '#C5'
       )
-    )
-  for(i in c(2,3)){
-    plot_seq=plot_seq+eval(parse(
-      text=sprintf(
-        'geom_segment(data=fdata,aes(y=offset-0.5,yend=offset+0.5,x=%s,xend=%s,color="%s"))',
-        type[i],type[i],name[i]
-      )
-    ))
-  }
+    )+
+    geom_segment(data=fdata,aes(y=offset-0.5,yend=offset+0.5,x=pure,xend=pure,color="纯律"))+
+    geom_segment(data=fdata,aes(y=offset-0.5,yend=offset+0.5,x=pyth,xend=pyth,color="五度相生律"))
   
   pdf('变化音级_频率.pdf',10,4,family="GB1")
   print(plot_seq)
+  graphics.off()
+  
+  # 音程间频率差
+  plot_diff=ggplot()+theme_bw()+
+    theme(panel.grid.minor = element_blank(),axis.text.x = element_text(hjust=1,angle=45))+
+    labs(y='音级间相差音分数',x='十二平均律音级/距A4音分数')+
+    scale_color_hue('律制')+scale_linetype('升降号')+
+    scale_y_continuous(breaks=seq(-50,50,5))+
+    scale_x_log10(
+      breaks=c(
+        246.941650628062,  277.182630976872,
+        311.126983722081, 329.62755691287, 349.228231433004, 369.994422711634,
+        415.304697579945, 466.16376151809, 493.883301256124,
+        523.251130601197, 554.365261953744
+      ),
+      labels=c(
+        '#B3 bC4',  '#C4 bD4', '#D4 bE4', 'bF4', '#E4', 
+        '#F4 bG4', '#G4 bA4', '#A4 bB4', 'bC5', '#B4', '#C5'
+      )
+    )+geom_hline(aes(yintercept=0))+
+    geom_line(data=fdata[fdata$offset==1,],aes(x=equal,y=log(pyth/equal,2)*1200,color='五度相生律',linetype='b'))+
+    geom_line(data=fdata[fdata$offset==1,],aes(x=equal,y=log(pure/equal,2)*1200,color='纯律',linetype='b'))+
+    geom_line(data=fdata[fdata$offset==0,],aes(x=equal,y=log(pyth/equal,2)*1200,color='五度相生律',linetype='#'))+
+    geom_line(data=fdata[fdata$offset==0,],aes(x=equal,y=log(pure/equal,2)*1200,color='纯律',linetype='#'))
+  
+  pdf('变化音级_频率差.pdf',10,5,family="GB1")
+  print(plot_diff)
   graphics.off()
 }
