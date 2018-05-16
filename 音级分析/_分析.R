@@ -46,7 +46,7 @@ name=c('十二平均律','五度相生律','纯律')
   # 二度音程分布图
   plot_dist=ggplot()+theme_bw()+theme(panel.grid.minor = element_blank())+
     labs(x='音程长度/音分',y='密度')+scale_color_hue('律制')+
-    scale_x_continuous(breaks=c(100,200))
+    scale_x_continuous(breaks=c(100,200),limits=c(50,250))
   for(i in 1:3){
     plot_dist=plot_dist+eval(parse(
       text=sprintf(
